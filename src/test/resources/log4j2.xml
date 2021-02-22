@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" packages="com.tesco.crypt">
+    <Appenders>
+        <Console name="STDOUT"/>
+    </Appenders>
+    <Loggers>
+        <Root level="${env:KMIP_LOG_LEVEL:-info}" includeLocation="false">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>

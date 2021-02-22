@@ -1,0 +1,99 @@
+import static org.gradle.api.tasks.testing.logging.TestLogEvent.*
+
+plugins {
+    id "java-library"
+    id "io.freefair.lombok" version "5.3.0"
+}
+
+gradle.startParameter.showStacktrace = ShowStacktrace.ALWAYS_FULL
+
+version = "1.5.${Instant.now().epochSecond.toString()}+${gitHash}"
+group = 'com.tesco.crypt'
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+println "\n\n\n\n============================================================================="
+println "== CREATING ARTIFACT: ${group}:${name}:${version} =="
+println "=============================================================================\n\n\n\n"
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+}
+
+def log4j2Version = "2.13.1"
+def junitVersion = "5.6.0"
+dependencies {
+    // apache commons
+    implementation "commons-io:commons-io:2.7"
+    implementation "org.apache.commons:commons-lang3:3.10"
+    implementation "commons-codec:commons-codec:1.14"
+
+    // logging
+    implementation "org.apache.logging.log4j:log4j-api:${log4j2Version}"
+    implementation "org.apache.logging.log4j:log4j-core:${log4j2Version}"
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
+    implementation "org.apache.logging.log4j:log4j-jul:${log4j2Version}"
+    implementation "org.apache.logging.log4j:log4j-jcl:${log4j2Version}"
+    implementation "com.lmax:disruptor:3.4.2"
+
+    // jackson for debugging
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.11.0"
+
+    // unit testing
+    testImplementation "org.hamcrest:hamcrest:2.+"
+    testImplementation "org.mockito:mockito-core:3.6.+"
+    testImplementation "org.mock-server:mockserver-netty:5.11.0"
+    testCompile "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+    testCompile "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+    testCompile "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
+}
+
+compileJava {
+    options.compilerArgs += [
+            '-Xlint:unchecked',
+            '-Xlint:deprecation',
+            '-Xlint:-requires-transitive-automatic',
+            '-Werror',
+            '--add-exports', "java.base/sun.security.x509=ALL-UNNAMED",
+    ]
+}
+
+compileTestJava {
+    options.compilerArgs += [
+            '-Xlint:unchecked',
+            '-Xlint:deprecation',
+            '-Xlint:-requires-transitive-automatic',
+            '-Werror',
+            '--add-exports', "java.base/sun.security.x509=ALL-UNNAMED",
+    ]
+}
+
+test {
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+    systemProperties['junit.jupiter.execution.parallel.enabled'] = true
+    useJUnitPlatform {
+        includeTags 'UnitTest'
+        failFast = false
+    }
+    reports {
+        junitXml.enabled = true
+        html.enabled = true
+    }
+    testLogging {
+        events STARTED, PASSED, SKIPPED, FAILED, STANDARD_OUT, STANDARD_ERROR
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+    doFirst() {
+        systemProperty "java.security.egd", "file:/dev/urandom"
+        environment "PRETTY_PRINT_LOG", "true"
+        environment "LOG_LEVEL_CRYPT", "debug"
+        environment "LOG_LEVEL_ROOT", "warn"
+    }
+}
+
+java {
+    withSourcesJar()
+}

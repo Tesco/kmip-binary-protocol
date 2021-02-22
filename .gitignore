@@ -1,0 +1,98 @@
+# Vert.x #
+##########
+.vertx/
+
+# Compiled source #
+###################
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+!maven-wrapper.jar
+!gradle-wrapper.jar
+*.rar
+*.tar
+*.zip
+*.tgz
+mods
+bin
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# JetBrains config files #
+##########################
+.idea
+*.iml
+
+# Eclipse config files #
+########################
+.project
+.classpath
+.settings
+
+# Maven build artifacts files #
+###############################
+target
+pom.xml.releaseBackup
+release.properties
+.extract
+
+# rbenv config #
+################
+.ruby-version
+
+# Gradle build artifacts files #
+################################
+.gradle
+build
+out
+dataobjects.adoc
+*.pid
+
+# Generated source directories #
+################################
+src/gen
+
+# grunt / node build artifacts #
+################################
+node_modules
+npm-debug.log
+custom_tmp
+.bundle
+
+# vagrant #
+###########
+.vagrant
+.vscode
+.gradletasknamecache
+*.swp
+
+# terraform #
+#############
+.terraform
+terraform.tfstate
+terraform.tfstate.*
